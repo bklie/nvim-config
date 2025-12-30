@@ -1,0 +1,11 @@
+# Neovim data directory (plugins installed by lazy.nvim)
+lazy/
+
+# Neovim state files
+*.log
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
