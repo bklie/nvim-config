@@ -1,3 +1,18 @@
+-- ================================================
+-- lazy.nvim読み込み前に設定が必要なもの
+-- ================================================
+
+-- Leaderキーを設定（lazy.nvimより前に必須）
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+
+-- True color support（カラースキーム用）
+vim.opt.termguicolors = true
+
+-- ================================================
+-- lazy.nvim のセットアップ
+-- ================================================
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.fn.system({
@@ -15,6 +30,9 @@ require("lazy").setup({
     spec = { { import = "plugins" } }
 })
 
-require("options")
+-- ================================================
+-- 設定ファイルの読み込み
+-- ================================================
 
-require("lualine").setup()
+require("options")
+require("keymaps")

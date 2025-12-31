@@ -3,4 +3,9 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.clipboard:append({"unnamedplus"})
-vim.api.nvim_set_keymap('i', 'jj', '<Esc>', { noremap = true, silent = true })
+
+-- カーソル行を強調表示
+vim.opt.cursorline = true
+
+-- 相対行番号を有効化（オプション）
+vim.opt.relativenumber = false
