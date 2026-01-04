@@ -1,4 +1,22 @@
 return {
+    -- im-select.nvim: インサートモード離脱時に自動で英語入力に切替
+    {
+        "keaising/im-select.nvim",
+        event = "InsertEnter",
+        config = function()
+            require("im_select").setup({
+                -- macOS: 英語入力ソース
+                default_im_select = "com.apple.keylayout.ABC",
+                default_command = "im-select",
+                -- インサートモード離脱時に英語に切替
+                set_default_events = { "InsertLeave", "CmdlineLeave" },
+                -- インサートモード復帰時に前の入力ソースを復元しない（常に英語で開始）
+                set_previous_events = {},
+            })
+        end,
+    },
+
+    -- Sidekick.nvim: AI assistant
     {
         "folke/sidekick.nvim",
         event = "VeryLazy",
