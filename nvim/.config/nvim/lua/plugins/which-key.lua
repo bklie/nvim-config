@@ -9,9 +9,16 @@ return {
     opts = {
         -- 表示遅延（ミリ秒）
         delay = 300,
-        -- トリガー設定（Visual モードを除外）
+        -- トリガー設定（特定のプレフィックスのみ）
         triggers = {
-            { "<auto>", mode = "nisotc" },  -- "x" (visual) を除外
+            { "<leader>", mode = { "n", "v" } },
+            { "g", mode = { "n", "v" } },
+            { "z", mode = { "n" } },
+            { "[", mode = { "n" } },
+            { "]", mode = { "n" } },
+            { '"', mode = { "n", "v" } },  -- レジスタ選択
+            { "'", mode = { "n" } },       -- マーク
+            { "`", mode = { "n" } },       -- マーク
         },
         -- アイコン設定
         icons = {

@@ -36,13 +36,13 @@ config.font = wezterm.font_with_fallback({
 -- カラースキーム
 -- ================================================
 
--- Gruvboxをベースにカスタマイズ
-config.color_scheme = "Gruvbox dark, medium (base16)"
+-- Catppuccin Mocha（モダンでエレガント）
+config.color_scheme = "Catppuccin Mocha"
 
 -- 背景の透明度
-config.window_background_opacity = 0.95
+config.window_background_opacity = 0.92
 if is_mac then
-    config.macos_window_background_blur = 20
+    config.macos_window_background_blur = 30
 end
 
 -- ================================================
@@ -51,10 +51,16 @@ end
 
 config.window_decorations = "RESIZE"
 config.window_padding = {
-    left = 10,
-    right = 10,
-    top = 10,
-    bottom = 10,
+    left = 12,
+    right = 12,
+    top = 12,
+    bottom = 12,
+}
+config.window_frame = {
+    font = wezterm.font("JetBrains Mono", { weight = "Bold" }),
+    font_size = is_mac and 13.0 or 11.0,
+    active_titlebar_bg = "#1e1e2e",
+    inactive_titlebar_bg = "#181825",
 }
 
 -- 初期サイズ
@@ -67,20 +73,50 @@ config.initial_rows = 35
 
 config.enable_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = true
-config.use_fancy_tab_bar = true
+config.use_fancy_tab_bar = false  -- レトロタブでモダンスタイル
 config.tab_bar_at_bottom = false
+config.show_new_tab_button_in_tab_bar = false
 
 -- タブのタイトル形式
-config.tab_max_width = 25
+config.tab_max_width = 32
+
+-- タブバーの色設定（Catppuccin Mocha）
+config.colors = {
+    tab_bar = {
+        background = "#1e1e2e",
+        active_tab = {
+            bg_color = "#cba6f7",
+            fg_color = "#1e1e2e",
+            intensity = "Bold",
+        },
+        inactive_tab = {
+            bg_color = "#313244",
+            fg_color = "#cdd6f4",
+        },
+        inactive_tab_hover = {
+            bg_color = "#45475a",
+            fg_color = "#cdd6f4",
+        },
+        new_tab = {
+            bg_color = "#313244",
+            fg_color = "#cdd6f4",
+        },
+        new_tab_hover = {
+            bg_color = "#45475a",
+            fg_color = "#cdd6f4",
+        },
+    },
+}
 
 -- ================================================
 -- カーソル設定
 -- ================================================
 
-config.default_cursor_style = "BlinkingBlock"
-config.cursor_blink_rate = 500
-config.cursor_blink_ease_in = "Constant"
-config.cursor_blink_ease_out = "Constant"
+config.default_cursor_style = "BlinkingBar"
+config.cursor_blink_rate = 600
+config.cursor_blink_ease_in = "EaseIn"
+config.cursor_blink_ease_out = "EaseOut"
+config.force_reverse_video_cursor = true
 
 -- ================================================
 -- スクロール設定
@@ -215,6 +251,39 @@ config.mouse_bindings = {
         action = wezterm.action.OpenLinkAtMouseCursor,
     },
 }
+
+-- ================================================
+-- タブタイトルのカスタマイズ
+-- ================================================
+
+wezterm.on("format-tab-title", function(tab)
+    local pane = tab.active_pane
+    local title = pane.title
+    local index = tab.tab_index + 1
+
+    -- プロセス名でアイコンを決定
+    local icon = ""
+    if title:find("nvim") or title:find("vim") then
+        icon = " "
+    elseif title:find("zsh") or title:find("bash") or title:find("fish") then
+        icon = " "
+    elseif title:find("node") then
+        icon = " "
+    elseif title:find("python") then
+        icon = " "
+    elseif title:find("git") then
+        icon = " "
+    elseif title:find("docker") then
+        icon = " "
+    end
+
+    -- タイトルを短縮
+    if #title > 20 then
+        title = title:sub(1, 17) .. "..."
+    end
+
+    return string.format(" %d:%s%s ", index, icon, title)
+end)
 
 -- ================================================
 -- ローカル設定の読み込み
