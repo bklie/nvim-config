@@ -27,7 +27,12 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-    spec = { { import = "plugins" } }
+    spec = {
+        { import = "plugins" },
+        -- Local plugins (machine-specific, gitignored)
+        -- Create lua/plugins/local.lua to add plugins for this machine only
+        { import = "plugins.local", optional = true },
+    }
 })
 
 -- ================================================
@@ -37,3 +42,14 @@ require("lazy").setup({
 require("options")
 require("keymaps")
 require("highlights")
+
+-- ================================================
+-- ローカル設定の読み込み（マシン固有、gitignore対象）
+-- ================================================
+-- lua/local.lua が存在する場合のみ読み込み
+-- キーマップ、オプション、autocmdなどをマシン固有で設定可能
+
+local local_config = vim.fn.stdpath("config") .. "/lua/local.lua"
+if vim.fn.filereadable(local_config) == 1 then
+    require("local")
+end

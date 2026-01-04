@@ -1,0 +1,74 @@
+-- ================================================
+-- ローカルプラグイン設定（マシン固有）
+-- ================================================
+-- このファイルを local.lua にコピーして使用してください
+-- local.lua は .gitignore に登録されているため、Git管理対象外です
+--
+-- 使い方:
+--   cp lua/plugins/local.lua.example lua/plugins/local.lua
+--
+-- ================================================
+
+return {
+    -- ================================================
+    -- 例: 会社でのみ使用するプラグイン
+    -- ================================================
+
+    -- 例: Copilot（会社ライセンスがある場合）
+    -- {
+    --     "github/copilot.vim",
+    --     event = "InsertEnter",
+    -- },
+
+    -- 例: Obsidian連携（会社のナレッジベース用）
+    -- {
+    --     "epwalsh/obsidian.nvim",
+    --     version = "*",
+    --     lazy = true,
+    --     ft = "markdown",
+    --     dependencies = { "nvim-lua/plenary.nvim" },
+    --     opts = {
+    --         workspaces = {
+    --             { name = "work", path = "~/Documents/work-notes" },
+    --         },
+    --     },
+    -- },
+
+    -- 例: 会社固有のカラースキーム
+    -- {
+    --     "company/company-theme.nvim",
+    --     priority = 1000,
+    --     config = function()
+    --         vim.cmd.colorscheme("company-theme")
+    --     end,
+    -- },
+
+    -- 例: 特定言語のサポート（会社プロジェクト用）
+    -- {
+    --     "prisma/vim-prisma",
+    --     ft = "prisma",
+    -- },
+
+    -- 例: REST APIテスト用
+    -- {
+    --     "rest-nvim/rest.nvim",
+    --     ft = "http",
+    --     config = function()
+    --         require("rest-nvim").setup()
+    --     end,
+    -- },
+
+    -- ================================================
+    -- 既存プラグインの設定上書き
+    -- ================================================
+
+    -- 例: Telescopeに追加設定
+    -- {
+    --     "nvim-telescope/telescope.nvim",
+    --     opts = {
+    --         defaults = {
+    --             file_ignore_patterns = { "company-specific-folder" },
+    --         },
+    --     },
+    -- },
+}

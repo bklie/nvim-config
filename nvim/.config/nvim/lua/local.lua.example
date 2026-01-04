@@ -1,0 +1,60 @@
+-- ================================================
+-- ローカル設定ファイル（マシン固有）
+-- ================================================
+-- このファイルを local.lua にコピーして使用してください
+-- local.lua は .gitignore に登録されているため、Git管理対象外です
+--
+-- 使い方:
+--   cp lua/local.lua.example lua/local.lua
+--
+-- ================================================
+
+-- ================================================
+-- オプション設定
+-- ================================================
+
+-- 例: フォントサイズやカラースキームの変更
+-- vim.opt.guifont = "JetBrains Mono:h14"
+-- vim.cmd.colorscheme("tokyonight")
+
+-- 例: 会社のプロキシ設定など
+-- vim.env.http_proxy = "http://proxy.company.com:8080"
+-- vim.env.https_proxy = "http://proxy.company.com:8080"
+
+-- ================================================
+-- キーマップ追加
+-- ================================================
+
+local keymap = vim.keymap.set
+
+-- 例: 会社固有のキーマップ
+-- keymap("n", "<leader>jira", ":!open https://jira.company.com<CR>", { desc = "Open JIRA" })
+
+-- 例: プロジェクト固有のコマンド
+-- keymap("n", "<leader>run", ":!./scripts/run-dev.sh<CR>", { desc = "Run dev server" })
+
+-- ================================================
+-- Autocmd追加
+-- ================================================
+
+-- 例: 特定のプロジェクトでのみ有効な設定
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--     pattern = "*/company-project/*",
+--     callback = function()
+--         vim.opt_local.tabstop = 4
+--         vim.opt_local.shiftwidth = 4
+--     end,
+-- })
+
+-- ================================================
+-- LSP設定の上書き
+-- ================================================
+
+-- 例: 会社のLSPサーバー設定
+-- vim.lsp.config('custom_lsp', {
+--     cmd = { 'custom-lsp-server' },
+--     filetypes = { 'custom' },
+-- })
+-- vim.lsp.enable('custom_lsp')
+
+print("Local config loaded")

@@ -9,3 +9,7 @@ lazy/
 
 # macOS
 .DS_Store
+
+# Local configuration (machine-specific settings)
+lua/local.lua
+lua/plugins/local.lua

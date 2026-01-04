@@ -437,6 +437,59 @@ ensure_installed = {
 
 設定を反映させるためにNeovimを再起動します。
 
+## マシン固有のローカル設定
+
+会社PCや個人PCなど、マシンごとに異なる設定を追加できます。ローカル設定ファイルは`.gitignore`に登録されているため、Git管理対象外です。
+
+### ローカル設定ファイル
+
+| ファイル | 用途 |
+|----------|------|
+| `lua/local.lua` | キーマップ、オプション、autocmdなど |
+| `lua/plugins/local.lua` | マシン固有のプラグイン追加 |
+
+### セットアップ方法
+
+```bash
+# ローカル設定用のテンプレートをコピー
+cp lua/local.lua.example lua/local.lua
+cp lua/plugins/local.lua.example lua/plugins/local.lua
+
+# 必要に応じて編集
+nvim lua/local.lua
+nvim lua/plugins/local.lua
+```
+
+### 使用例
+
+**lua/local.lua** - キーマップやオプションの追加:
+```lua
+-- 会社固有のキーマップ
+vim.keymap.set("n", "<leader>jira", ":!open https://jira.company.com<CR>")
+
+-- プロキシ設定
+vim.env.http_proxy = "http://proxy.company.com:8080"
+
+-- カラースキームの変更
+vim.cmd.colorscheme("tokyonight")
+```
+
+**lua/plugins/local.lua** - プラグインの追加:
+```lua
+return {
+    -- Copilot（会社ライセンスがある場合）
+    {
+        "github/copilot.vim",
+        event = "InsertEnter",
+    },
+    -- 会社固有のカラースキーム
+    {
+        "folke/tokyonight.nvim",
+        priority = 1000,
+    },
+}
+```
+
 ## トラブルシューティング
 
 ### LSPが起動しない / 遅い
