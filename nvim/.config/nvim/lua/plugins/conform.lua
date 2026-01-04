@@ -68,6 +68,14 @@ return {
                     },
                     pint = {
                         command = mason_bin .. "pint",
+                        args = function()
+                            local config_path = vim.fn.expand("~/.config/nvim/linter-configs/pint.json")
+                            -- プロジェクトにpint.jsonがあればそちらを優先
+                            if vim.fn.filereadable("pint.json") == 1 then
+                                return { "$FILENAME" }
+                            end
+                            return { "--config", config_path, "$FILENAME" }
+                        end,
                     },
                     ["blade-formatter"] = {
                         command = mason_bin .. "blade-formatter",
