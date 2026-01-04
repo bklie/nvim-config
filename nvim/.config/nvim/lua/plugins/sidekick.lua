@@ -4,15 +4,28 @@ return {
         "keaising/im-select.nvim",
         event = "InsertEnter",
         config = function()
-            require("im_select").setup({
-                -- macOS: 英語入力ソース
-                default_im_select = "com.apple.keylayout.ABC",
-                default_command = "im-select",
+            local is_mac = vim.fn.has("macunix") == 1
+            local is_linux = vim.fn.has("unix") == 1 and not is_mac
+
+            local im_config = {
                 -- インサートモード離脱時に英語に切替
                 set_default_events = { "InsertLeave", "CmdlineLeave" },
                 -- インサートモード復帰時に前の入力ソースを復元しない（常に英語で開始）
                 set_previous_events = {},
-            })
+            }
+
+            if is_mac then
+                -- macOS: im-select (brew install im-select)
+                im_config.default_im_select = "com.apple.keylayout.ABC"
+                im_config.default_command = "im-select"
+            elseif is_linux then
+                -- Linux: fcitx5-remote (sudo apt install fcitx5)
+                -- fcitx5の場合: "1" = 非アクティブ（英語直接入力）
+                im_config.default_im_select = "1"
+                im_config.default_command = "fcitx5-remote"
+            end
+
+            require("im_select").setup(im_config)
         end,
     },
 
