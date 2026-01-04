@@ -18,6 +18,8 @@ return {
                     "vimdoc",
                     "python",
                     "php",
+                    "php_only",  -- PHPのみ（HTMLなし）
+                    "blade",     -- Laravel Blade
                     "html",
                     "css",
                     "scss",

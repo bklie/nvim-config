@@ -52,6 +52,7 @@ require("lazy").setup({
 require("options")
 require("keymaps")
 require("highlights")
+require("im-switch").setup()  -- 日本語入力自動切替
 
 -- ================================================
 -- ローカル設定の読み込み（マシン固有、gitignore対象）

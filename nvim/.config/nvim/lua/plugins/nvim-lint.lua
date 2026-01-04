@@ -235,6 +235,7 @@ return {
             -- 各ファイルタイプに対応するLinterを設定
             lint.linters_by_ft = {
                 php = { "phpstan" },
+                blade = { "phpstan", "htmlhint" },  -- BladeはPHP + HTMLのlintを適用
                 dockerfile = { "hadolint" },
                 env = { "dotenv_linter" },
                 yaml = { "yamllint" },

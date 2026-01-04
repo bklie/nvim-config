@@ -111,7 +111,7 @@ return {
             vim.lsp.config('intelephense', {
                 cmd = { 'intelephense', '--stdio' },
                 root_markers = { 'composer.json', '.git' },
-                filetypes = { 'php' },
+                filetypes = { 'php', 'blade' },
                 on_attach = on_attach,
                 capabilities = capabilities,
             })
@@ -120,7 +120,7 @@ return {
             vim.lsp.config('html', {
                 cmd = { 'vscode-html-language-server', '--stdio' },
                 root_markers = { 'package.json', '.git' },
-                filetypes = { 'html', 'htmldjango' },
+                filetypes = { 'html', 'htmldjango', 'blade' },
                 on_attach = on_attach,
                 capabilities = capabilities,
             })
@@ -187,7 +187,7 @@ return {
             vim.lsp.config('emmet_ls', {
                 cmd = { 'emmet-ls', '--stdio' },
                 root_markers = { 'package.json', '.git' },
-                filetypes = { 'html', 'css', 'scss', 'sass', 'javascriptreact', 'typescriptreact', 'vue' },
+                filetypes = { 'html', 'css', 'scss', 'sass', 'javascriptreact', 'typescriptreact', 'vue', 'blade' },
                 on_attach = on_attach,
                 capabilities = capabilities,
             })
@@ -197,19 +197,19 @@ return {
             local linter_config_dir = vim.fn.expand("~/.config/nvim/linter-configs/")
 
             -- Biome (JS/TS/JSON formatter & linter)
-            -- Note: Neovim 0.11の新しいAPIとの互換性問題のため、従来の方法を使用
-            local lspconfig = require('lspconfig')
-            lspconfig.biome.setup({
+            -- Neovim 0.11+のvim.lsp.config() APIを使用
+            vim.lsp.config('biome', {
                 cmd = { mason_bin .. "biome", 'lsp-proxy' },
                 filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'json', 'jsonc' },
-                root_dir = function(fname)
+                root_dir = function(bufnr, on_dir)
                     -- プロジェクトにbiome.jsonがあればそちらを優先
-                    local project_root = lspconfig.util.root_pattern('biome.json', 'biome.jsonc')(fname)
+                    local project_root = vim.fs.root(bufnr, { 'biome.json', 'biome.jsonc' })
                     if project_root then
-                        return project_root
+                        on_dir(project_root)
+                    else
+                        -- なければデフォルト設定ディレクトリをルートとする（biome.jsonがある）
+                        on_dir(linter_config_dir)
                     end
-                    -- なければデフォルト設定ディレクトリをルートとする（biome.jsonがある）
-                    return linter_config_dir
                 end,
                 single_file_support = true,
                 on_attach = on_attach,
@@ -244,7 +244,7 @@ return {
             vim.lsp.enable('sqls')
             vim.lsp.enable('somesass_ls')
             vim.lsp.enable('emmet_ls')
-            -- biomeは従来のsetup()を使用しているためここでは不要
+            vim.lsp.enable('biome')
         end
     },
 }
