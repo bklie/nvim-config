@@ -292,7 +292,6 @@ alias dps='docker ps'
 (( $+commands[docker] )) && compdef d=docker 2>/dev/null
 
 # Neovim
-alias n='nvim'
 alias v='nvim'
 alias vi='nvim'
 alias vim='nvim'

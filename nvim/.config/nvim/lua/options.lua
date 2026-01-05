@@ -11,5 +11,8 @@ vim.opt.smartcase = true   -- 大文字を含む場合は区別する
 -- カーソル行を強調表示
 vim.opt.cursorline = true
 
+-- 行の折り返し表示を無効化（長い行も1行で表示）
+vim.opt.wrap = false
+
 -- 相対行番号を有効化（オプション）
 vim.opt.relativenumber = false

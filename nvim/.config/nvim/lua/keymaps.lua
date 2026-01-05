@@ -9,9 +9,6 @@ local opts = { noremap = true, silent = true }
 -- 基本操作
 -- ================================================
 
--- インサートモードを抜ける
-keymap('i', 'jj', '<Esc>', opts)
-
 -- クイックセーブ（無名バッファの場合は名前を付けて保存）
 keymap('n', '<leader>w', function()
     if vim.fn.expand('%') == '' then
