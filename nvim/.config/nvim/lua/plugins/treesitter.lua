@@ -28,6 +28,8 @@ return {
                     "sql",
                     "json",
                     "jsonc",
+                    "rust",
+                    "toml",
                 },
                 -- 自動インストールを有効化
                 auto_install = true,

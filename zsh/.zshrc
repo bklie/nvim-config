@@ -63,6 +63,11 @@ if [[ -d /usr/local/go/bin ]]; then
 fi
 export PATH="$PATH:$HOME/go/bin"
 
+# Rust/Cargo
+if [[ -d "$HOME/.cargo/bin" ]]; then
+    export PATH="$HOME/.cargo/bin:$PATH"
+fi
+
 # ================================================
 # 補完設定
 # ================================================
@@ -295,6 +300,50 @@ alias dps='docker ps'
 alias v='nvim'
 alias vi='nvim'
 alias vim='nvim'
+
+# メモ管理（~/Memo に保存、Git管理なし）
+MEMO_DIR="$HOME/Memo"
+unalias memo memos memo-search memo-edit 2>/dev/null
+
+# 新規メモ作成（タイムスタンプでファイル名自動生成）
+memo() {
+    mkdir -p "$MEMO_DIR"
+    local filename="$(date +%Y%m%d_%H%M%S).md"
+    nvim "$MEMO_DIR/$filename"
+}
+
+# メモ一覧（1行目をプレビュー表示）
+memos() {
+    if [[ ! -d "$MEMO_DIR" ]]; then
+        echo "No memos found."
+        return
+    fi
+    for f in "$MEMO_DIR"/*.md(N); do
+        local title=$(head -1 "$f" 2>/dev/null | sed 's/^#* *//')
+        [[ -z "$title" ]] && title="(empty)"
+        printf "%-20s  %s\n" "$(basename "$f")" "$title"
+    done | sort -r
+}
+
+# メモ検索
+memo-search() {
+    grep -rl "$1" "$MEMO_DIR" 2>/dev/null | while read f; do
+        local title=$(head -1 "$f" | sed 's/^#* *//')
+        echo "$(basename "$f"): $title"
+    done
+}
+
+# メモ編集（fzfで選択、なければ引数でファイル名指定）
+memo-edit() {
+    if [[ -n "$1" ]]; then
+        nvim "$MEMO_DIR/$1"
+    elif command -v fzf &>/dev/null; then
+        local selected=$(memos | fzf --preview "head -20 $MEMO_DIR/{1}" | awk '{print $1}')
+        [[ -n "$selected" ]] && nvim "$MEMO_DIR/$selected"
+    else
+        echo "Usage: memo-edit <filename> or install fzf for interactive selection"
+    fi
+}
 
 # その他
 alias ..='cd ..'

@@ -50,6 +50,7 @@ return {
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
         ft = { "markdown" },
         build = "cd app && npm install",
+        pin = true,  -- バージョン固定（ビルドステップがあるため環境間で差分が出やすい）
         init = function()
             vim.g.mkdp_auto_start = 0
             vim.g.mkdp_auto_close = 1

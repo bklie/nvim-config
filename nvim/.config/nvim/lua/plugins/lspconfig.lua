@@ -151,6 +151,25 @@ return {
                 capabilities = capabilities,
             })
 
+            -- Rust Language Server (rust-analyzer)
+            vim.lsp.config('rust_analyzer', {
+                cmd = { 'rust-analyzer' },
+                root_markers = { 'Cargo.toml', 'rust-project.json', '.git' },
+                filetypes = { 'rust' },
+                settings = {
+                    ['rust-analyzer'] = {
+                        cargo = {
+                            allFeatures = true,
+                        },
+                        checkOnSave = {
+                            command = 'clippy',
+                        },
+                    },
+                },
+                on_attach = on_attach,
+                capabilities = capabilities,
+            })
+
             -- Nginx Language Server
             vim.lsp.config('nginx_language_server', {
                 cmd = { 'nginx-language-server' },
@@ -246,6 +265,7 @@ return {
             vim.lsp.enable('html')
             vim.lsp.enable('yamlls')
             vim.lsp.enable('dockerls')  -- Dockerfile + Docker Compose両方をサポート
+            vim.lsp.enable('rust_analyzer')
             vim.lsp.enable('nginx_language_server')
             vim.lsp.enable('sqls')
             vim.lsp.enable('somesass_ls')
