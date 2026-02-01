@@ -72,7 +72,7 @@ config.initial_rows = 35
 -- ================================================
 
 config.enable_tab_bar = true
-config.hide_tab_bar_if_only_one_tab = true
+config.hide_tab_bar_if_only_one_tab = false
 config.use_fancy_tab_bar = false  -- レトロタブでモダンスタイル
 config.tab_bar_at_bottom = false
 config.show_new_tab_button_in_tab_bar = false
@@ -156,6 +156,9 @@ end
 local mod = is_mac and "CMD" or "ALT"
 local mod_shift = is_mac and "CMD|SHIFT" or "ALT|SHIFT"
 
+-- Leaderキーの設定（Shift + Space）
+config.leader = { key = "a", mods = "CTRL", timeout_milliseconds = 1500 }
+
 config.keys = {
     -- ================================================
     -- タブ操作
@@ -175,8 +178,8 @@ config.keys = {
     { key = "9", mods = mod, action = wezterm.action.ActivateTab(-1) },  -- 最後のタブ
 
     -- タブを左右に移動
-    { key = "h", mods = mod, action = wezterm.action.ActivateTabRelative(-1) },
-    { key = "l", mods = mod, action = wezterm.action.ActivateTabRelative(1) },
+    { key = "j", mods = mod_shift, action = wezterm.action.ActivateTabRelative(-1) },
+    { key = "k", mods = mod_shift, action = wezterm.action.ActivateTabRelative(1) },
 
     -- ================================================
     -- ペイン操作
@@ -218,7 +221,7 @@ config.keys = {
     -- スクロールバッファクリア
     -- ================================================
     -- docker compose upなどのログをクリア（フォアグラウンドプロセス実行中でも動作）
-    { key = "k", mods = mod, action = wezterm.action.ClearScrollback("ScrollbackAndViewport") },
+    { key = "c", mods = mod_shift, action = wezterm.action.ClearScrollback("ScrollbackAndViewport") },
 
     -- ================================================
     -- フォントサイズ
@@ -237,6 +240,32 @@ config.keys = {
     -- ================================================
     -- Ctrl-Shift-F をアプリケーションに渡す（WezTerm側でキャプチャしない）
     { key = "f", mods = "CTRL|SHIFT", action = wezterm.action.SendKey({ key = "f", mods = "CTRL|SHIFT" }) },
+
+    -- ================================================
+    -- Workspace操作
+    -- ================================================
+    -- Leader + l: Workspace一覧を表示
+    {
+        key = "l",
+        mods = "LEADER",
+        action = wezterm.action.ShowLauncherArgs({ flags = "FUZZY|WORKSPACES" }),
+    },
+
+    -- Ctrl + Shift + n: 新規ウィンドウ（Workspace名を入力）
+    {
+        key = "n",
+        mods = "CTRL|SHIFT",
+        action = wezterm.action.PromptInputLine({
+            description = "Enter workspace name for new window:",
+            action = wezterm.action_callback(function(window, pane, line)
+                if line and line ~= "" then
+                    wezterm.mux.spawn_window({
+                        workspace = line,
+                    })
+                end
+            end),
+        }),
+    },
 }
 
 -- ================================================
@@ -251,6 +280,27 @@ config.mouse_bindings = {
         action = wezterm.action.OpenLinkAtMouseCursor,
     },
 }
+
+-- ================================================
+-- Workspace名をセッション起動時に入力
+-- ================================================
+
+wezterm.on("gui-startup", function(cmd)
+    local args = cmd or {}
+    local _, _, window = wezterm.mux.spawn_window(args)
+
+    window:gui_window():perform_action(
+        wezterm.action.PromptInputLine({
+            description = "Enter workspace name:",
+            action = wezterm.action_callback(function(window, _, line)
+                if line and line ~= "" then
+                    wezterm.mux.rename_workspace(wezterm.mux.get_active_workspace(), line)
+                end
+            end),
+        }),
+        window:active_pane()
+    )
+end)
 
 -- ================================================
 -- タブタイトルのカスタマイズ
@@ -283,6 +333,22 @@ wezterm.on("format-tab-title", function(tab)
     end
 
     return string.format(" %d:%s%s ", index, icon, title)
+end)
+
+-- ================================================
+-- タブバー右側にWorkspace名を表示
+-- ================================================
+
+wezterm.on("update-right-status", function(window)
+    local workspace = window:active_workspace()
+    local bg_color = "#cba6f7"  -- Catppuccin Mocha purple
+    local fg_color = "#1e1e2e"  -- Catppuccin Mocha base
+
+    window:set_right_status(wezterm.format({
+        { Background = { Color = bg_color } },
+        { Foreground = { Color = fg_color } },
+        { Text = "  " .. workspace .. "  " },
+    }))
 end)
 
 -- ================================================
