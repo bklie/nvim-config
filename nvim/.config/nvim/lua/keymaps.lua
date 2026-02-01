@@ -78,7 +78,7 @@ keymap('n', '<leader>W', function()
 end, { desc = 'Save as (always prompt)' })
 
 -- 全選択
-keymap('n', '<C-a>', 'ggVG', { desc = 'Select all' })
+keymap('n', '<leader>a', 'ggVG', { desc = 'Select all' })
 
 -- ================================================
 -- ファイル検索（Telescope）
